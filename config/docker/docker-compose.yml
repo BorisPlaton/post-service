@@ -1,0 +1,46 @@
+version: '3.9'
+
+x-app-setup: &app-setup
+  image: 'post-service:latest'
+  env_file:
+    - '${ENV_FILE}'
+  depends_on:
+    database:
+      condition: service_healthy
+  volumes:
+    - ../../src:/app
+
+services:
+
+  app:
+    <<: *app-setup
+    container_name: 'post-service'
+    ports:
+      - '8000:8000'
+    entrypoint: [ "ps_cli", "web", "up", "--port", "8000", "--workers", "1", "--debug" ]
+
+  app-migration:
+    <<: *app-setup
+    container_name: 'post-service-migration-app'
+
+  database:
+    image: 'postgres:latest'
+    environment:
+      - "POSTGRES_USER=${DB_USERNAME}"
+      - "POSTGRES_PASSWORD=${DB_PASSWORD}"
+      - "POSTGRES_DB=${DB_DATABASE}"
+    command: [
+      "-p", "${DB_PORT}",
+    ]
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    volumes:
+      - post_service_db:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE} -p ${DB_PORT}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  post_service_db:

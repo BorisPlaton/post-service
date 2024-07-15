@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "post-service"
+version = "1.0.0"
+description = "API for managing posts and comments with AI moderating and automatic reply function."
+authors = ["Kirill <pnchkirill@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.0"
+sqlalchemy = "^2.0.31"
+punq = "^0.7.0"
+pydantic-settings = "^2.3.4"
+pyjwt = "^2.8.0"
+alembic = "^1.13.2"
+asyncpg = "^0.29.0"
+google-generativeai = "^0.7.2"
+rq = "^1.16.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
