@@ -2,7 +2,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Any
 
-from shared.message_bus.interface.handler.handler import IMessageHandler
+from shared.message_bus.interface.handler import IMessageHandler
 from shared.message_bus.interface.message import IMessage
 
 

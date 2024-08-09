@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from fastapi import status
 
 from shared.exception.base import BaseAppException
+from shared.exception.failed import Failed
 from shared.exception.forbidden import Forbidden
 from shared.exception.no_authorized import NotAuthorized
 from shared.exception.not_found import NotFound
@@ -30,6 +31,11 @@ def exception_factory(exc: BaseAppException) -> HTTPException:
         case NotAuthorized():
             return HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
+                detail=str(exc),
+            )
+        case Failed():
+            return HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail=str(exc),
             )
 

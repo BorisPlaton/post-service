@@ -11,11 +11,13 @@ from settings.module import SettingsModule
 from shared.exception.base import BaseAppException
 from shared.fastapi_.exception.factory import exception_factory
 from shared.module import SharedModule
-from shared.module_setup.bootstrap import ModulesConfig
+from shared.module_setup.config import ModulesConfig
 from domain.user.controller.rest.api import tag as user_tag
 from domain.user.controller.rest.api import router as user_router
 from domain.post.controller.rest.api import tag as post_tag
 from domain.post.controller.rest.api import router as post_router
+from domain.auto_reply.controller.rest.api import tag as auto_response_tag
+from domain.auto_reply.controller.rest.api import router as auto_response_router
 
 
 def create_app() -> FastAPI:
@@ -51,10 +53,15 @@ def create_app() -> FastAPI:
                 "description": "Operations with posts. Has operation to create post/comments and"
                                " to retrieve aggregated statistics for them.",
             },
+            {
+                "name": auto_response_tag,
+                "description": "Operations for the comment auto reply functionality.",
+            },
         ],
     )
     app.include_router(user_router)
     app.include_router(post_router)
+    app.include_router(auto_response_router)
 
     @app.middleware('http')
     async def set_registry[T](

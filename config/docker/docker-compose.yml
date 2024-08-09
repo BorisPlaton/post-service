@@ -7,6 +7,8 @@ x-app-setup: &app-setup
   depends_on:
     database:
       condition: service_healthy
+    redis:
+      condition: service_healthy
   volumes:
     - ../../src:/app
 
@@ -14,14 +16,12 @@ services:
 
   app:
     <<: *app-setup
-    container_name: 'post-service'
     ports:
       - '8000:8000'
     entrypoint: [ "ps_cli", "web", "up", "--port", "8000", "--workers", "1", "--debug" ]
 
   app-migration:
     <<: *app-setup
-    container_name: 'post-service-migration-app'
 
   database:
     image: 'postgres:latest'
@@ -41,6 +41,28 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    command:
+      - "--requirepass ${REDIS_PASSWORD}"
+      - "--port ${REDIS_PORT}"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli","ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  rq-worker:
+    <<: *app-setup
+    restart: always
+    command: [
+      "rq", "worker",
+      "--url", "redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}/${REDIS_DB}",
+      "default"
+    ]
 
 volumes:
   post_service_db:

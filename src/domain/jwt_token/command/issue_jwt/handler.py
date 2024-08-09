@@ -8,7 +8,7 @@ from domain.jwt_token.command.issue_jwt.command import IssueJWTCommand
 from domain.jwt_token.types.jwt_payload import JWTPayload
 from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
 from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
-from shared.message_bus.command_bus.handler.handler import ICommandHandler
+from shared.message_bus.command_bus.handler.interface import ICommandHandler
 
 
 class IssueJWTCommandHandler(
@@ -16,7 +16,7 @@ class IssueJWTCommandHandler(
     IConfigurableCommand,
 ):
     """
-    The command handler to generate new JWT.
+    The command handler to generate a new JWT.
     """
 
     def __init__(
@@ -37,7 +37,7 @@ class IssueJWTCommandHandler(
         Generates and returns a new JWT with provided payload.
 
         @param message:
-            Contains payload that will contain JWT.
+            Contains payload that will contain a JWT.
         @return:
             The new generated JWT.
         """

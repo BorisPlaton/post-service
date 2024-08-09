@@ -11,7 +11,7 @@ from domain.user.exception.user_with_provided_login_doesnt_exist import UserWith
 from domain.user.model import User
 from domain.user.repository.user.interface import IUserRepository
 from shared.fastapi_.dependency.registry import get_registry
-from shared.message_bus.command_bus.interface.bus import ICommandBus
+from shared.message_bus.command_bus.bus.interface import ICommandBus
 
 
 bearer = HTTPBearer()

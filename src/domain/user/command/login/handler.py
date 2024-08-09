@@ -9,8 +9,8 @@ from domain.user.exception.user_with_provided_login_doesnt_exist import UserWith
 from domain.user.repository.user.interface import IUserRepository
 from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
 from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
-from shared.message_bus.command_bus.interface.bus import ICommandBus
-from shared.message_bus.command_bus.handler.handler import ICommandHandler
+from shared.message_bus.command_bus.bus.interface import ICommandBus
+from shared.message_bus.command_bus.handler.interface import ICommandHandler
 
 
 class LogInUserCommandHandler(

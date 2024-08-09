@@ -1,8 +1,12 @@
-import google.generativeai
 from punq import Container
 
 from domain.ai.component.client.client import AIClient
 from domain.ai.component.client.interface import IAIClient
+from domain.auto_reply.command.configure.command import ConfigureCommentAutoReplyCommand
+from domain.auto_reply.command.configure.handler import ConfigureCommentAutoReplyCommandHandler
+from domain.auto_reply.event_handler.delay_response_for_new_comment import AutoResponseForNewComment
+from domain.auto_reply.repository.configuration.interface import ICommentAutoResponseConfigurationRepository
+from domain.auto_reply.repository.configuration.repository import DelayedCommentResponseConfigurationRepository
 from domain.jwt_token.command.issue_jwt.command import IssueJWTCommand
 from domain.jwt_token.command.issue_jwt.handler import IssueJWTCommandHandler
 from domain.jwt_token.command.validate_jwt.command import ValidateJWTCommand
@@ -13,6 +17,7 @@ from domain.post.commad.create_post.command import CreatePostCommand
 from domain.post.commad.create_post.handler import CreatePostCommandHandler
 from domain.post.commad.validate_text.command import ValidateTextCommand
 from domain.post.commad.validate_text.handler import ValidateTextCommandHandler
+from domain.post.event.new_comment_created import NewCommentCreatedEvent
 from domain.post.repository.comment.interface import IPostCommentRepository
 from domain.post.repository.comment.repository import PostCommentRepository
 from domain.post.repository.post.interface import IPostRepository
@@ -27,11 +32,14 @@ from domain.user.command.register.command import RegisterUserCommand
 from domain.user.command.register.handler import RegisterUserCommandHandler
 from domain.user.repository.user.interface import IUserRepository
 from domain.user.repository.user.repository import UserRepository
+from settings.config.ai import AISettings
 from settings.config.app import ApplicationSettings
-from settings.config.gemini import GeminiSettings
-from shared.database.sqlalchemy.connection.interface import IAsyncSQLAlchemyConnection
-from shared.message_bus.command_bus.interface.bus import ICommandBus
+from shared.database.sqlalchemy.connection.interface import IAsyncSQLAlchemyConnectionManager
+from shared.message_bus.command_bus.bus.interface import ICommandBus
+from shared.message_bus.event_bus.bus.interface import IEventBus
+from shared.module_setup.config import ModulesConfig
 from shared.module_setup.module import IModule
+from shared.redis_.client.interface import IRedisClient
 
 
 class DomainModule(IModule):
@@ -46,26 +54,29 @@ class DomainModule(IModule):
         self._register_commands(
             container=container,
         )
+        self._register_event_handlers(
+            container=container,
+        )
 
     @staticmethod
     def _configure_dependencies(container: Container) -> None:
         container.register(
             service=IUserRepository,
             instance=UserRepository(
-                async_connection=container.resolve(IAsyncSQLAlchemyConnection),
+                connection_manager=container.resolve(IAsyncSQLAlchemyConnectionManager),
             ),
         )
 
         container.register(
             service=IPostRepository,
             instance=PostRepository(
-                async_connection=container.resolve(IAsyncSQLAlchemyConnection),
+                connection_manager=container.resolve(IAsyncSQLAlchemyConnectionManager),
             ),
         )
         container.register(
             service=IPostCommentRepository,
             instance=PostCommentRepository(
-                async_connection=container.resolve(IAsyncSQLAlchemyConnection),
+                connection_manager=container.resolve(IAsyncSQLAlchemyConnectionManager),
             ),
         )
         container.register(
@@ -82,12 +93,17 @@ class DomainModule(IModule):
             ),
         )
 
-        google.generativeai.configure(
-            api_key=container.resolve(GeminiSettings).API_KEY,
-        )
         container.register(
             service=IAIClient,
-            instance=AIClient(),
+            instance=AIClient(
+                settings=container.resolve(AISettings),
+            ),
+        )
+        container.register(
+            service=ICommentAutoResponseConfigurationRepository,
+            instance=DelayedCommentResponseConfigurationRepository(
+                connection_manager=container.resolve(IAsyncSQLAlchemyConnectionManager),
+            ),
         )
 
     @staticmethod
@@ -98,6 +114,9 @@ class DomainModule(IModule):
             message=RegisterUserCommand,
             handler=RegisterUserCommandHandler(
                 user_repository=container.resolve(IUserRepository),
+                delayed_comment_response_configuration_repository=container.resolve(
+                    ICommentAutoResponseConfigurationRepository,
+                )
             ),
         )
         command_bus.register(
@@ -127,6 +146,7 @@ class DomainModule(IModule):
                 comment_repository=container.resolve(IPostCommentRepository),
                 post_repository=container.resolve(IPostRepository),
                 command_bus=command_bus,
+                event_bus=container.resolve(IEventBus),
             ),
         )
         command_bus.register(
@@ -141,4 +161,30 @@ class DomainModule(IModule):
             handler=ValidateTextCommandHandler(
                 ai_client=container.resolve(IAIClient)
             )
+        )
+
+        command_bus.register(
+            message=ConfigureCommentAutoReplyCommand,
+            handler=ConfigureCommentAutoReplyCommandHandler(
+                comment_auto_reply_configuration_repository=container.resolve(
+                    ICommentAutoResponseConfigurationRepository
+                ),
+            ),
+        )
+
+    @staticmethod
+    def _register_event_handlers(container: Container) -> None:
+        event_bus = container.resolve(IEventBus)
+
+        event_bus.register(
+            message=NewCommentCreatedEvent,
+            handler=AutoResponseForNewComment(
+                configuration_repository=container.resolve(ICommentAutoResponseConfigurationRepository),
+                ai_client=container.resolve(IAIClient),
+                post_comment_repository=container.resolve(IPostCommentRepository),
+                post_repository=container.resolve(IPostRepository),
+                user_repository=container.resolve(IUserRepository),
+                redis_client=container.resolve(IRedisClient),
+                modules_config=container.resolve(ModulesConfig),
+            ),
         )

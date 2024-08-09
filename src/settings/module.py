@@ -2,7 +2,8 @@ from punq import Container
 
 from settings.config.app import ApplicationSettings
 from settings.config.database import DatabaseSettings
-from settings.config.gemini import GeminiSettings
+from settings.config.ai import AISettings
+from settings.config.redis import RedisSettings
 from shared.module_setup.module import IModule
 
 
@@ -13,14 +14,18 @@ class SettingsModule(IModule):
         container: Container,
     ) -> None:
         container.register(
-            DatabaseSettings,
+            service=DatabaseSettings,
             instance=DatabaseSettings(),
         )
         container.register(
-            ApplicationSettings,
+            service=ApplicationSettings,
             instance=ApplicationSettings(),
         )
         container.register(
-            GeminiSettings,
-            instance=GeminiSettings(),
+            service=AISettings,
+            instance=AISettings(),
+        )
+        container.register(
+            service=RedisSettings,
+            instance=RedisSettings(),
         )

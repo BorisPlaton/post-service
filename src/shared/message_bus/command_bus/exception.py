@@ -1,0 +1,2 @@
+class CommandBusException(Exception):
+    pass

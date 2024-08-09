@@ -11,7 +11,7 @@ from domain.jwt_token.types.jwt_payload import JWTPayload
 from domain.jwt_token.types.jwt_payload import JWTPayloadBody
 from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
 from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
-from shared.message_bus.command_bus.handler.handler import ICommandHandler
+from shared.message_bus.command_bus.handler.interface import ICommandHandler
 
 
 class ValidateJWTCommandHandler(
@@ -19,7 +19,7 @@ class ValidateJWTCommandHandler(
     IConfigurableCommand,
 ):
     """
-    Validates that provided JWT is valid and returns its body payload.
+    Validates that the provided JWT is valid and returns its body payload.
     """
 
     def __init__(
@@ -37,10 +37,10 @@ class ValidateJWTCommandHandler(
         message: ValidateJWTCommand,
     ) -> JWTPayloadBody:
         """
-        Validates JWT and returns payload.
+        Validates the JWT and returns payload.
 
         @param message:
-            The message with JWT to validate.
+            The message with the JWT to validate.
         @raise ExpiredSignatureError:
             If the provided JWT is expired, raises an exception.
         @return:

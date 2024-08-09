@@ -1,27 +1,28 @@
-from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter
 from fastapi import Body
 from fastapi import Depends
-from fastapi import HTTPException
 from fastapi import Path
-from fastapi import Query
 from fastapi import status
 from punq import Container
 
+from domain.post.controller.rest.contracts.output.blocked_comments_statistics import \
+    PostCommentBlockStatisticsOutputContract
+from domain.post.controller.rest.contracts.output.blocked_posts_statistics import PostBlockStatisticsOutputContract
 from domain.post.controller.rest.dependency.statistics_range.dependency import get_statistics_range
 from domain.post.controller.rest.dependency.statistics_range.type import StatisticsRangeType
-from domain.post.controller.rest.types.input.comment import NewPostCommentInput
-from domain.post.controller.rest.types.input.post import NewPostInput
-from domain.post.controller.rest.types.output.comment import PostCommentOutput
-from domain.post.controller.rest.types.output.post import PostOutput
+from domain.post.controller.rest.contracts.input.comment import NewPostCommentInput
+from domain.post.controller.rest.contracts.input.post import NewPostInput
+from domain.post.controller.rest.contracts.output.comment import PostCommentOutput
+from domain.post.controller.rest.contracts.output.post import PostOutput
+from domain.post.model import PostComment
 from domain.post.service.comment.interface import IPostCommentService
 from domain.post.service.post.interface import IPostService
 from domain.user.controller.rest.dependency.user import get_user
 from domain.user.model import User
 from shared.fastapi_.dependency.registry import get_registry
-from shared.message_bus.command_bus.interface.bus import ICommandBus
+from shared.message_bus.command_bus.bus.interface import ICommandBus
 
 
 router = APIRouter(
@@ -55,7 +56,10 @@ async def get_post_comments(
     """
     Returns all comments for a specific post.
     """
-    return await registry.resolve(IPostCommentService).get_post_comments(post_id=post_id)
+    return await registry.resolve(IPostCommentService).get_post_comments(
+        post_id=post_id,
+        order_by=(PostComment.created_at,)
+    )
 
 
 @router.get(
@@ -63,10 +67,10 @@ async def get_post_comments(
     status_code=status.HTTP_200_OK,
 )
 async def get_blocked_comments_statistics(
-    _: Annotated[Container, Depends(get_user)],
+    _: Annotated[User, Depends(get_user)],
     registry: Annotated[Container, Depends(get_registry)],
     date_range: Annotated[StatisticsRangeType, Depends(get_statistics_range)],
-):
+) -> list[PostCommentBlockStatisticsOutputContract]:
     """
     Returns a statistic about blocked comments for some time range.
 
@@ -85,10 +89,10 @@ async def get_blocked_comments_statistics(
     status_code=status.HTTP_200_OK,
 )
 async def get_blocked_posts_statistics(
-    _: Annotated[Container, Depends(get_user)],
+    _: Annotated[User, Depends(get_user)],
     registry: Annotated[Container, Depends(get_registry)],
     date_range: Annotated[StatisticsRangeType, Depends(get_statistics_range)],
-):
+) -> list[PostBlockStatisticsOutputContract]:
     """
     Returns a statistic about blocked posts for some time range.
 

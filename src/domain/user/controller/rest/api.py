@@ -6,11 +6,11 @@ from fastapi import Depends
 from fastapi import status
 from punq import Container
 
-from domain.user.controller.rest.types.input.login import UserLoginInput
-from domain.user.controller.rest.types.input.register import RegisterUserInput
-from domain.user.controller.rest.types.output.token import UserJWTOutput
+from domain.user.controller.rest.contracts.input.login import UserLoginInput
+from domain.user.controller.rest.contracts.input.register import RegisterUserInput
+from domain.user.controller.rest.contracts.output.token import UserJWTOutput
 from shared.fastapi_.dependency.registry import get_registry
-from shared.message_bus.command_bus.interface.bus import ICommandBus
+from shared.message_bus.command_bus.bus.interface import ICommandBus
 
 
 router = APIRouter(

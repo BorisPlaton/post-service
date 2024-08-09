@@ -6,7 +6,7 @@ from typing import AsyncContextManager
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-class IAsyncSQLAlchemyConnection(ABC):
+class IAsyncSQLAlchemyConnectionManager(ABC):
 
     @abstractmethod
     @asynccontextmanager

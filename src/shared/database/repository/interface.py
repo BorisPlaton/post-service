@@ -1,6 +1,7 @@
 from abc import ABC
 from abc import abstractmethod
 from typing import Any
+from typing import Iterable
 
 from sqlalchemy import ScalarResult
 
@@ -8,15 +9,33 @@ from sqlalchemy import ScalarResult
 class IAsyncCRUDRepository[T, U](ABC):
 
     @abstractmethod
-    async def get(self, id_: T) -> U:
+    async def get(
+        self,
+        id_: T,
+    ) -> U:
         raise NotImplementedError()
 
     @abstractmethod
-    async def get_by_ids(self, ids: list[T]) -> U:
+    async def get_by_ids(
+        self,
+        ids: list[T],
+        order_by: Iterable[Any] | None = None,
+    ) -> U:
         raise NotImplementedError()
 
     @abstractmethod
-    async def get_all(self) -> list[U]:
+    async def get_all(
+        self,
+        order_by: Iterable[Any] | None = None,
+    ) -> list[U]:
+        raise NotImplementedError()
+
+    @abstractmethod
+    async def get_all_by_filter(
+        self,
+        filter_: Any,
+        order_by: Iterable[Any] | None = None,
+    ) -> list[U]:
         raise NotImplementedError()
 
     @abstractmethod

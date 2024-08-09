@@ -1,5 +1,5 @@
 from abc import ABC
 
 
-class CommandOptions(ABC):
+class ICommandOptions(ABC):
     pass

@@ -4,7 +4,7 @@ from domain.ai.component.client.interface import IAIClient
 from domain.post.commad.validate_text.command import ValidateTextCommand
 from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
 from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
-from shared.message_bus.command_bus.handler.handler import ICommandHandler
+from shared.message_bus.command_bus.handler.interface import ICommandHandler
 
 
 class ValidateTextCommandHandler(
@@ -44,18 +44,16 @@ class ValidateTextCommandHandler(
         doesnt_have_bad_words_answer = '+'
         has_bad_words_answer = '-'
 
-        try:
-            answer = self._ai_client.send(
-                message=f"""
-                You are a moderator, that checks the message for availability. If
-                the message contains obscene language, insults, etc, you have to answer '{has_bad_words_answer}',
-                otherwise you have to answer '{doesnt_have_bad_words_answer}'.
+        answer = self._ai_client.send(
+            message=f"""
+            You are a moderator, that checks the message for availability. You have to answer only with
+            '{doesnt_have_bad_words_answer}' and '{has_bad_words_answer}'. If the message contains obscene
+            language, insults, racial slurs, etc, you have to answer '{has_bad_words_answer}', otherwise
+            you have to answer '{doesnt_have_bad_words_answer}'.
 
-                Does the following text has obscene language, insults, etc: "{message.text}"?
-                """,
-            )
-        except ValueError:
-            answer = '-'
+            Does the following text has obscene language, insults, etc: "{message.text}"?
+            """,
+        )
 
         if answer == doesnt_have_bad_words_answer:
             return True

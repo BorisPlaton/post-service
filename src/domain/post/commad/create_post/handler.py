@@ -2,8 +2,8 @@ from domain.post.commad.create_post.command import CreatePostCommand
 from domain.post.commad.validate_text.command import ValidateTextCommand
 from domain.post.model import Post
 from domain.post.repository.post.interface import IPostRepository
-from shared.message_bus.command_bus.handler.handler import ICommandHandler
-from shared.message_bus.command_bus.interface.bus import ICommandBus
+from shared.message_bus.command_bus.handler.interface import ICommandHandler
+from shared.message_bus.command_bus.bus.interface import ICommandBus
 
 
 class CreatePostCommandHandler(ICommandHandler[int, CreatePostCommand]):
@@ -28,7 +28,7 @@ class CreatePostCommandHandler(ICommandHandler[int, CreatePostCommand]):
         message: CreatePostCommand,
     ) -> int:
         """
-        Creates a new post and sends event that post has been created.
+        Creates a new post and moderates it via AI.
 
         @param message:
             Contains all information about the post.
@@ -39,7 +39,7 @@ class CreatePostCommandHandler(ICommandHandler[int, CreatePostCommand]):
             content=message.content,
             title=message.title,
             author_id=message.author_id,
-            blocked=not self._command_bus.handle(
+            blocked=not await self._command_bus.handle(
                 message=ValidateTextCommand(
                     text=f"{message.title} {message.content}",
                 )

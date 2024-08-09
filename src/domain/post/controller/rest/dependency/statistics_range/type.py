@@ -7,5 +7,5 @@ class StatisticsRangeType:
     """
     The dataclass that contains data range.
     """
-    from_: date
-    to: date
+    from_: date | None
+    to: date | None

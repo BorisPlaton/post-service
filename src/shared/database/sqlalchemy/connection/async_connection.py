@@ -10,10 +10,10 @@ from sqlalchemy.ext.asyncio import async_scoped_session
 from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from shared.database.sqlalchemy.connection.interface import IAsyncSQLAlchemyConnection
+from shared.database.sqlalchemy.connection.interface import IAsyncSQLAlchemyConnectionManager
 
 
-class AsyncSQLAlchemyConnection(IAsyncSQLAlchemyConnection):
+class AsyncSQLAlchemyConnectionManager(IAsyncSQLAlchemyConnectionManager):
 
     def __init__(
         self,

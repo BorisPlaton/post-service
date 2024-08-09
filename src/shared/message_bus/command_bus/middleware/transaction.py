@@ -2,13 +2,14 @@ from typing import Any
 from typing import Awaitable
 from typing import Callable
 
-from shared.database.sqlalchemy.connection.interface import IAsyncSQLAlchemyConnection
+from shared.database.sqlalchemy.connection.interface import IAsyncSQLAlchemyConnectionManager
+from shared.database.sqlalchemy.transcation.interface import ITransactionManager
 from shared.database.sqlalchemy.transcation.manager import TransactionManager
 from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
 from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
 from shared.message_bus.command_bus.handler.provider.interface import ICommandHandlerProvider
-from shared.message_bus.command_bus.interface.command import ICommand
-from shared.message_bus.command_bus.interface.middleware import ICommandBusMiddleware
+from shared.message_bus.command_bus.command import ICommand
+from shared.message_bus.command_bus.middleware.interface import ICommandBusMiddleware
 
 
 class TransactionMiddleware(ICommandBusMiddleware):
@@ -16,9 +17,9 @@ class TransactionMiddleware(ICommandBusMiddleware):
     def __init__(
         self,
         handler_provider: ICommandHandlerProvider,
-        connection: IAsyncSQLAlchemyConnection,
+        transaction_manager: ITransactionManager,
     ):
-        self._connection = connection
+        self._transaction_manager = transaction_manager
         self._handler_provider = handler_provider
 
     async def handle(
@@ -34,9 +35,8 @@ class TransactionMiddleware(ICommandBusMiddleware):
                 start_transaction = transaction_option.is_transactional
 
         if start_transaction:
-            async with self._connection.connect() as session:
-                async with TransactionManager().begin(session):
-                    return await next_(message)
+            async with self._transaction_manager.begin():
+                return await next_(message)
         else:
             return await next_(message)
 
