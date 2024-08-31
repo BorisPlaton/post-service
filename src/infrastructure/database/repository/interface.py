@@ -13,7 +13,7 @@ class IAsyncCRUDRepository[T, U](ABC):
         self,
         id_: T,
     ) -> U:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     async def get_by_ids(
@@ -21,14 +21,14 @@ class IAsyncCRUDRepository[T, U](ABC):
         ids: list[T],
         order_by: Iterable[Any] | None = None,
     ) -> U:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     async def get_all(
         self,
         order_by: Iterable[Any] | None = None,
     ) -> list[U]:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     async def get_all_by_filter(
@@ -36,33 +36,56 @@ class IAsyncCRUDRepository[T, U](ABC):
         filter_: Any,
         order_by: Iterable[Any] | None = None,
     ) -> list[U]:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
-    async def delete(self, entity: U) -> None:
-        raise NotImplementedError()
+    async def delete(
+        self,
+        entity: U,
+    ) -> None:
+        ...
 
     @abstractmethod
-    async def update(self, entity: U) -> None:
-        raise NotImplementedError()
+    async def update(
+        self,
+        entity: U,
+    ) -> None:
+        ...
 
     @abstractmethod
-    async def update_many(self, entities: list[U]) -> None:
-        raise NotImplementedError()
+    async def update_many(
+        self,
+        entities: list[U],
+    ) -> None:
+        ...
 
     @abstractmethod
-    async def create(self, entity: U) -> None:
-        raise NotImplementedError()
+    async def create(
+        self,
+        entity: U,
+    ) -> None:
+        ...
 
     @abstractmethod
-    async def scalars(self, *args, **kwargs) -> ScalarResult:
-        raise NotImplementedError()
+    async def scalars(
+        self,
+        *args,
+        **kwargs,
+    ) -> ScalarResult:
+        ...
 
     @abstractmethod
-    async def scalar(self, *args, **kwargs) -> ScalarResult:
-        raise NotImplementedError()
+    async def scalar(
+        self,
+        *args,
+        **kwargs,
+    ) -> ScalarResult:
+        ...
 
     @abstractmethod
-    async def execute(self, *args, **kwargs) -> Any:
-        raise NotImplementedError()
-
+    async def execute(
+        self,
+        *args,
+        **kwargs,
+    ) -> Any:
+        ...

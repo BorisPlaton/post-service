@@ -9,5 +9,4 @@ class IRedisClient(ABC):
 
     @cached_property
     @abstractmethod
-    def client(self) -> Redis:
-        raise NotImplementedError()
+    def client(self) -> Redis: ...

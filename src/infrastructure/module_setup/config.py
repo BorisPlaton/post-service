@@ -2,7 +2,7 @@ from typing import Iterable
 
 from punq import Container
 
-from infrastructure.module_setup.module import IModule
+from infrastructure.module_setup.interface import IModule
 
 
 class ModulesConfig:

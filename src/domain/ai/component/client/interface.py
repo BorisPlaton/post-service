@@ -9,4 +9,4 @@ class IAIClient(ABC):
         self,
         message: str,
     ) -> str:
-        raise NotImplementedError()
+        ...

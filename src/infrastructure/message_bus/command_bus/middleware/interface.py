@@ -15,4 +15,4 @@ class ICommandBusMiddleware[T](ABC):
         message: ICommand,
         next_: Callable[[ICommand], Awaitable[Any]],
     ) -> T:
-        raise NotImplementedError()
+        ...

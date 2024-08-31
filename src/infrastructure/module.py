@@ -15,7 +15,7 @@ from infrastructure.message_bus.event_bus.bus.bus import EventBus
 from infrastructure.message_bus.event_bus.bus.interface import IEventBus
 from infrastructure.message_bus.event_bus.handler.provider.interface import IEventHandlerProvider
 from infrastructure.message_bus.event_bus.handler.provider.provider import EventHandlerProvider
-from infrastructure.module_setup.module import IModule
+from infrastructure.module_setup.interface import IModule
 from infrastructure.database.sqlalchemy.connection.async_connection import AsyncSQLAlchemyConnectionManager
 from infrastructure.database.sqlalchemy.connection.interface import IAsyncSQLAlchemyConnectionManager
 from infrastructure.message_bus.command_bus.bus.interface import ICommandBus

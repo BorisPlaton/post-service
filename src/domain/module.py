@@ -39,7 +39,7 @@ from infrastructure.settings.app import ApplicationSettings
 from infrastructure.database.sqlalchemy.connection.interface import IAsyncSQLAlchemyConnectionManager
 from infrastructure.message_bus.command_bus.bus.interface import ICommandBus
 from infrastructure.message_bus.event_bus.bus.interface import IEventBus
-from infrastructure.module_setup.module import IModule
+from infrastructure.module_setup.interface import IModule
 from infrastructure.redis_.client.interface import IRedisClient
 
 

@@ -11,4 +11,4 @@ class IModule(ABC):
         self,
         container: Container,
     ) -> None:
-        raise NotImplementedError()
+        ...

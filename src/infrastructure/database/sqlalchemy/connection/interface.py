@@ -10,5 +10,4 @@ class IAsyncSQLAlchemyConnectionManager(ABC):
 
     @abstractmethod
     @asynccontextmanager
-    async def connect(self) -> AsyncContextManager[AsyncSession]:
-        raise NotImplementedError()
+    async def connect(self) -> AsyncContextManager[AsyncSession]: ...

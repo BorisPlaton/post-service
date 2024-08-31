@@ -8,5 +8,8 @@ from infrastructure.database.sqlalchemy.repository import AsyncSQLAlchemyReposit
 class IUserRepository(AsyncSQLAlchemyRepository[int, User], ABC):
 
     @abstractmethod
-    async def get_by_login(self, login: str) -> User | None:
-        raise NotImplementedError()
+    async def get_by_login(
+        self,
+        login: str,
+    ) -> User | None:
+        ...

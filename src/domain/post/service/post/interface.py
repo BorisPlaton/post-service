@@ -13,7 +13,7 @@ class IPostService(ABC):
         self,
         post_id: int,
     ) -> Post:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     async def get_statistics(
@@ -21,4 +21,4 @@ class IPostService(ABC):
         from_: date,
         to: date,
     ) -> list[PostBlockStatistics]:
-        raise NotImplementedError()
+        ...

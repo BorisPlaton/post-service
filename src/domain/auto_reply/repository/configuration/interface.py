@@ -15,4 +15,4 @@ class ICommentAutoReplyConfigurationRepository(
         self,
         user_id: int,
     ) -> CommentAutoReplyConfiguration:
-        raise NotImplementedError()
+        ...

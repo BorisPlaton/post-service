@@ -14,11 +14,11 @@ class IMessageBus[T: IMessage, U: IMessageHandler](ABC):
         message: type[T],
         handler: U,
     ) -> None:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     async def handle(
         self,
         message: T,
     ) -> Any:
-        raise NotImplementedError()
+        ...

@@ -12,4 +12,4 @@ class ICommandHandlerExecutor(ABC):
         self,
         command: ICommand,
     ) -> Any:
-        raise NotImplementedError()
+        ...

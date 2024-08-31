@@ -12,7 +12,7 @@ class IEventHandlerProvider(ABC):
         self,
         event: type[IEvent],
     ) -> list[IEventHandler]:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     def __setitem__(
@@ -20,4 +20,4 @@ class IEventHandlerProvider(ABC):
         event: type[IEvent],
         handler: IEventHandler,
     ) -> None:
-        raise NotImplementedError()
+        ...

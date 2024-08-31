@@ -13,7 +13,7 @@ class IPostCommentService(ABC):
         self,
         post_id: int,
     ) -> list[PostComment]:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     async def get_statistics(
@@ -21,4 +21,4 @@ class IPostCommentService(ABC):
         from_: date,
         to: date,
     ) -> list[CommentBlockStatistics]:
-        raise NotImplementedError()
+        ...

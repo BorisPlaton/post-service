@@ -7,5 +7,4 @@ class ITransactionManager(ABC):
 
     @abstractmethod
     @asynccontextmanager
-    async def begin(self) -> None:
-        raise NotImplementedError()
+    async def begin(self) -> None: ...

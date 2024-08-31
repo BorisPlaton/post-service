@@ -10,15 +10,14 @@ class IConfigurableCommand[T: ICommandOptions](ABC):
 
     @property
     @abstractmethod
-    def command_config(self) -> dict[type[T], T]:
-        raise NotImplementedError()
+    def command_config(self) -> dict[type[T], T]: ...
 
     @abstractmethod
     def add_config(
         self,
         config: T,
     ) -> None:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     def update_config(
@@ -26,4 +25,4 @@ class IConfigurableCommand[T: ICommandOptions](ABC):
         config: T,
         **kwargs,
     ) -> None:
-        raise NotImplementedError()
+        ...

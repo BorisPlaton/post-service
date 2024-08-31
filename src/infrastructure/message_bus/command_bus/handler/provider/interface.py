@@ -12,7 +12,7 @@ class ICommandHandlerProvider(ABC):
         self,
         command: type[ICommand],
     ) -> ICommandHandler:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     def __setitem__(
@@ -20,4 +20,4 @@ class ICommandHandlerProvider(ABC):
         message: type[ICommand],
         handler: ICommandHandler,
     ) -> None:
-        raise NotImplementedError()
+        ...
