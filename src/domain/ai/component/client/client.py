@@ -1,7 +1,7 @@
 from groq import Groq
 
 from domain.ai.component.client.interface import IAIClient
-from settings.config.ai import AISettings
+from infrastructure.settings.config import AISettings
 
 
 class AIClient(IAIClient):

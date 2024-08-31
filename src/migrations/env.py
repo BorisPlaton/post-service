@@ -8,13 +8,10 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-from settings.config.database import DatabaseSettings
-from settings.module import SettingsModule
-from shared.database.sqlalchemy.base import Base
-from shared.module_setup.config import ModulesConfig
-from domain.user.model import *
-from domain.post.model import *
-from domain.auto_reply.model import *
+from infrastructure.settings.database import DatabaseSettings
+from infrastructure.settings import SettingsModule
+from infrastructure.database.sqlalchemy.base import Base
+from infrastructure.module_setup.config import ModulesConfig
 
 
 module_bootstrap = ModulesConfig(

@@ -5,12 +5,12 @@ from domain.post.exception.post_doesnt_exist import PostDoesNotExist
 from domain.post.model import PostComment
 from domain.post.repository.comment.interface import IPostCommentRepository
 from domain.post.repository.post.interface import IPostRepository
-from shared.message_bus.command_bus.handler.interface import ICommandHandler
-from shared.message_bus.command_bus.bus.interface import ICommandBus
-from shared.message_bus.event_bus.bus.interface import IEventBus
+from infrastructure.message_bus.command_bus.handler.interface import ICommandHandler
+from infrastructure.message_bus.command_bus.bus.interface import ICommandBus
+from infrastructure.message_bus.event_bus.bus.interface import IEventBus
 
 
-class AddPostCommentCommandHandler(ICommandHandler[int, AddPostCommentCommand]):
+class AddPostCommentCommandHandler(ICommandHandler[AddPostCommentCommand, int]):
     """
     Adds a new comment to the specific post.
     """

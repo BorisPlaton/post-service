@@ -5,8 +5,8 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.types import CHAR
 
-from shared.database.sqlalchemy.base import Base
-from shared.database.sqlalchemy.mixins import IdMixin
+from infrastructure.database.sqlalchemy.base import Base
+from infrastructure.database.sqlalchemy.mixins import IdMixin
 
 
 class User(IdMixin, Base):

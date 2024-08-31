@@ -6,8 +6,8 @@ from sqlalchemy import sql
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
-from shared.database.sqlalchemy.base import Base
-from shared.database.sqlalchemy.mixins import IdMixin
+from infrastructure.database.sqlalchemy.base import Base
+from infrastructure.database.sqlalchemy.mixins import IdMixin
 
 
 class CommentAutoReplyConfiguration(IdMixin, Base):

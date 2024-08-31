@@ -1,16 +1,9 @@
-from functools import cached_property
-
 from domain.ai.component.client.interface import IAIClient
 from domain.post.commad.validate_text.command import ValidateTextCommand
-from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
-from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
-from shared.message_bus.command_bus.handler.interface import ICommandHandler
+from infrastructure.message_bus.command_bus.handler.interface import ICommandHandler
 
 
-class ValidateTextCommandHandler(
-    ICommandHandler[bool, ValidateTextCommand],
-    IConfigurableCommand,
-):
+class ValidateTextCommandHandler(ICommandHandler[ValidateTextCommand, bool]):
     """
     The command for moderating a text for availability of the obscene language,
     insults, etc. using AI.
@@ -61,11 +54,3 @@ class ValidateTextCommandHandler(
             return False
 
         raise ValueError(f"Unexpected answer from model '{answer}'")
-
-    @cached_property
-    def config(self) -> dict[type[TransactionalOption], TransactionalOption]:
-        return {
-            TransactionalOption: TransactionalOption(
-                is_transactional=False,
-            )
-        }

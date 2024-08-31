@@ -10,11 +10,11 @@ from domain.auto_reply.command.configure.command import ConfigureCommentAutoRepl
 from domain.auto_reply.controller.rest.contracts.input.configure import \
     ConfigureCommentAutoReplyConfigurationInputContract
 from domain.auto_reply.controller.rest.contracts.output.configuration import CommentAutoReplyConfigurationOutputContract
-from domain.auto_reply.repository.configuration.interface import ICommentAutoResponseConfigurationRepository
+from domain.auto_reply.repository.configuration.interface import ICommentAutoReplyConfigurationRepository
 from domain.user.controller.rest.dependency.user import get_user
 from domain.user.model import User
-from shared.fastapi_.dependency.registry import get_registry
-from shared.message_bus.command_bus.bus.interface import ICommandBus
+from application.web.dependency import get_registry
+from infrastructure.message_bus.command_bus.bus.interface import ICommandBus
 
 
 router = APIRouter(
@@ -34,7 +34,7 @@ async def get_auto_reply_config(
     """
     Returns a user's auto reply configuration.
     """
-    return await registry.resolve(ICommentAutoResponseConfigurationRepository).get_by_user_id(
+    return await registry.resolve(ICommentAutoReplyConfigurationRepository).get_by_user_id(
         user_id=user.id,
     )
 

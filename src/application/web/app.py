@@ -6,12 +6,11 @@ from fastapi import Request
 from punq import Container
 
 from domain.module import DomainModule
-from settings.config.app import ApplicationSettings
-from settings.module import SettingsModule
-from shared.exception.base import BaseAppException
-from shared.fastapi_.exception.factory import exception_factory
-from shared.module import SharedModule
-from shared.module_setup.config import ModulesConfig
+from infrastructure.settings.app import ApplicationSettings
+from infrastructure.exception.base import BaseAppException
+from application.web.exception.factory import exception_factory
+from infrastructure.module import InfrastructureModule
+from infrastructure.module_setup.config import ModulesConfig
 from domain.user.controller.rest.api import tag as user_tag
 from domain.user.controller.rest.api import router as user_router
 from domain.post.controller.rest.api import tag as post_tag
@@ -30,8 +29,7 @@ def create_app() -> FastAPI:
     modules_config = ModulesConfig(
         container=Container(),
         modules=(
-            SettingsModule(),
-            SharedModule(),
+            InfrastructureModule(),
             DomainModule(),
         ),
     )

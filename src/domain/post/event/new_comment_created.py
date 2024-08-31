@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from shared.message_bus.event_bus.event import IEvent
+from infrastructure.message_bus.event_bus.event import IEvent
 
 
 @dataclass(kw_only=True, slots=True, frozen=True)

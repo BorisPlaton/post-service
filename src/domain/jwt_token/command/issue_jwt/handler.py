@@ -1,20 +1,14 @@
 from datetime import datetime
 from datetime import timedelta
-from functools import cached_property
 
 import jwt
 
 from domain.jwt_token.command.issue_jwt.command import IssueJWTCommand
 from domain.jwt_token.types.jwt_payload import JWTPayload
-from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
-from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
-from shared.message_bus.command_bus.handler.interface import ICommandHandler
+from infrastructure.message_bus.command_bus.handler.interface import ICommandHandler
 
 
-class IssueJWTCommandHandler(
-    ICommandHandler[str, IssueJWTCommand],
-    IConfigurableCommand,
-):
+class IssueJWTCommandHandler(ICommandHandler[IssueJWTCommand, str]):
     """
     The command handler to generate a new JWT.
     """
@@ -51,12 +45,3 @@ class IssueJWTCommandHandler(
             key=self._secret_key,
             algorithm="HS256"
         )
-
-    @cached_property
-    def config(self) -> dict[type[TransactionalOption], TransactionalOption]:
-        return {
-            TransactionalOption: TransactionalOption(
-                is_transactional=False,
-            )
-        }
-

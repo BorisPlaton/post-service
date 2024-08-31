@@ -4,10 +4,10 @@ from sqlalchemy import select
 
 from domain.auto_reply.excepiton.configuration_doesnt_exist import ConfigurationDoesNotExist
 from domain.auto_reply.model.configuration import CommentAutoReplyConfiguration
-from domain.auto_reply.repository.configuration.interface import ICommentAutoResponseConfigurationRepository
+from domain.auto_reply.repository.configuration.interface import ICommentAutoReplyConfigurationRepository
 
 
-class DelayedCommentResponseConfigurationRepository(ICommentAutoResponseConfigurationRepository):
+class DelayedCommentResponseConfigurationRepository(ICommentAutoReplyConfigurationRepository):
 
     async def get_by_user_id(
         self,

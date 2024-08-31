@@ -61,7 +61,8 @@ services:
     command: [
       "rq", "worker",
       "--url", "redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}/${REDIS_DB}",
-      "default"
+      "--with-scheduler",
+      "default",
     ]
 
 volumes:

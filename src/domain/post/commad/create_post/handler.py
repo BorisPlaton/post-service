@@ -2,11 +2,11 @@ from domain.post.commad.create_post.command import CreatePostCommand
 from domain.post.commad.validate_text.command import ValidateTextCommand
 from domain.post.model import Post
 from domain.post.repository.post.interface import IPostRepository
-from shared.message_bus.command_bus.handler.interface import ICommandHandler
-from shared.message_bus.command_bus.bus.interface import ICommandBus
+from infrastructure.message_bus.command_bus.handler.interface import ICommandHandler
+from infrastructure.message_bus.command_bus.bus.interface import ICommandBus
 
 
-class CreatePostCommandHandler(ICommandHandler[int, CreatePostCommand]):
+class CreatePostCommandHandler(ICommandHandler[CreatePostCommand, int]):
     """
     Creates a new post.
     """

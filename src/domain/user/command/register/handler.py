@@ -1,15 +1,15 @@
 from hashlib import sha256
 
 from domain.auto_reply.model.configuration import CommentAutoReplyConfiguration
-from domain.auto_reply.repository.configuration.interface import ICommentAutoResponseConfigurationRepository
+from domain.auto_reply.repository.configuration.interface import ICommentAutoReplyConfigurationRepository
 from domain.user.command.register.command import RegisterUserCommand
 from domain.user.exception.login_already_exist import LoginAlreadyExist
 from domain.user.model.user import User
 from domain.user.repository.user.interface import IUserRepository
-from shared.message_bus.command_bus.handler.interface import ICommandHandler
+from infrastructure.message_bus.command_bus.handler.interface import ICommandHandler
 
 
-class RegisterUserCommandHandler(ICommandHandler[int, RegisterUserCommand]):
+class RegisterUserCommandHandler(ICommandHandler[RegisterUserCommand, int]):
     """
     The command handler for the register user command.
 
@@ -19,7 +19,7 @@ class RegisterUserCommandHandler(ICommandHandler[int, RegisterUserCommand]):
     def __init__(
         self,
         user_repository: IUserRepository,
-        delayed_comment_response_configuration_repository: ICommentAutoResponseConfigurationRepository,
+        delayed_comment_response_configuration_repository: ICommentAutoReplyConfigurationRepository,
     ):
         """
         @param user_repository:

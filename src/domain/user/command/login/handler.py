@@ -1,4 +1,3 @@
-from functools import cached_property
 from hashlib import sha256
 
 from domain.jwt_token.command.issue_jwt.command import IssueJWTCommand
@@ -7,16 +6,11 @@ from domain.user.command.login.command import LogInUserCommand
 from domain.user.exception.invalid_password_provided import InvalidPasswordProvided
 from domain.user.exception.user_with_provided_login_doesnt_exist import UserWithProvidedLoginDoesntExist
 from domain.user.repository.user.interface import IUserRepository
-from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
-from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
-from shared.message_bus.command_bus.bus.interface import ICommandBus
-from shared.message_bus.command_bus.handler.interface import ICommandHandler
+from infrastructure.message_bus.command_bus.bus.interface import ICommandBus
+from infrastructure.message_bus.command_bus.handler.interface import ICommandHandler
 
 
-class LogInUserCommandHandler(
-    ICommandHandler[str, LogInUserCommand],
-    IConfigurableCommand,
-):
+class LogInUserCommandHandler(ICommandHandler[LogInUserCommand, str]):
     """
     The command handler to log in user.
 
@@ -65,11 +59,3 @@ class LogInUserCommandHandler(
                 )
             )
         )
-
-    @cached_property
-    def config(self) -> dict[type[TransactionalOption], TransactionalOption]:
-        return {
-            TransactionalOption: TransactionalOption(
-                is_transactional=False,
-            )
-        }

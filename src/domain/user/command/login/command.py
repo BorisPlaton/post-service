@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from shared.message_bus.command_bus.command import ICommand
+from infrastructure.message_bus.command_bus.command import ICommand
 
 
 @dataclass(kw_only=True, slots=True)

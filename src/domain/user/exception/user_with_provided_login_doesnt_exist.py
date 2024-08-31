@@ -1,4 +1,4 @@
-from shared.exception.not_found import NotFound
+from infrastructure.exception.not_found import NotFound
 
 
 class UserWithProvidedLoginDoesntExist(NotFound):

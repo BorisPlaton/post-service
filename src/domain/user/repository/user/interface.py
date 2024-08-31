@@ -2,7 +2,7 @@ from abc import ABC
 from abc import abstractmethod
 
 from domain.user.model.user import User
-from shared.database.sqlalchemy.repository import AsyncSQLAlchemyRepository
+from infrastructure.database.sqlalchemy.repository import AsyncSQLAlchemyRepository
 
 
 class IUserRepository(AsyncSQLAlchemyRepository[int, User], ABC):

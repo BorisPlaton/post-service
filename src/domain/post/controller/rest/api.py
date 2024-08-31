@@ -21,8 +21,8 @@ from domain.post.service.comment.interface import IPostCommentService
 from domain.post.service.post.interface import IPostService
 from domain.user.controller.rest.dependency.user import get_user
 from domain.user.model import User
-from shared.fastapi_.dependency.registry import get_registry
-from shared.message_bus.command_bus.bus.interface import ICommandBus
+from application.web.dependency import get_registry
+from infrastructure.message_bus.command_bus.bus.interface import ICommandBus
 
 
 router = APIRouter(

@@ -1,16 +1,16 @@
 from domain.auto_reply.command.configure.command import ConfigureCommentAutoReplyCommand
-from domain.auto_reply.repository.configuration.interface import ICommentAutoResponseConfigurationRepository
-from shared.message_bus.command_bus.handler.interface import ICommandHandler
+from domain.auto_reply.repository.configuration.interface import ICommentAutoReplyConfigurationRepository
+from infrastructure.message_bus.command_bus.handler.interface import ICommandHandler
 
 
-class ConfigureCommentAutoReplyCommandHandler(ICommandHandler[int, ConfigureCommentAutoReplyCommand]):
+class ConfigureCommentAutoReplyCommandHandler(ICommandHandler[ConfigureCommentAutoReplyCommand, None]):
     """
     Configures a comment auto response for the specific user.
     """
 
     def __init__(
         self,
-        comment_auto_reply_configuration_repository: ICommentAutoResponseConfigurationRepository,
+        comment_auto_reply_configuration_repository: ICommentAutoReplyConfigurationRepository,
     ):
         self._comment_auto_reply_configuration_repository = comment_auto_reply_configuration_repository
 

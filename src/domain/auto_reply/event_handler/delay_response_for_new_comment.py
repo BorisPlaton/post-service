@@ -3,29 +3,29 @@ from datetime import timedelta
 from rq import Queue
 
 from domain.ai.component.client.interface import IAIClient
-from domain.auto_reply.repository.configuration.interface import ICommentAutoResponseConfigurationRepository
-from domain.auto_reply.task.auto_reply import AutoReplyTask
-from domain.auto_reply.task.dto import NewCommentCreatedTaskDTO
+from domain.auto_reply.command.auto_reply.command import AutoReplyCommentCommand
+from domain.auto_reply.repository.configuration.interface import ICommentAutoReplyConfigurationRepository
 from domain.post.event.new_comment_created import NewCommentCreatedEvent
 from domain.post.repository.comment.interface import IPostCommentRepository
 from domain.post.repository.post.interface import IPostRepository
 from domain.user.repository.user.interface import IUserRepository
-from shared.message_bus.event_bus.handler.interface import IEventHandler
-from shared.module_setup.config import ModulesConfig
-from shared.redis_.client.interface import IRedisClient
+from infrastructure.message_bus.command_bus.bus.interface import ICommandBus
+from infrastructure.message_bus.command_bus.config.options.background import BackgroundExecutionOption
+from infrastructure.message_bus.event_bus.handler.interface import IEventHandler
+from infrastructure.redis_.client.interface import IRedisClient
 
 
-class AutoResponseForNewComment(IEventHandler[NewCommentCreatedEvent]):
+class AutoReplyForNewComment(IEventHandler[NewCommentCreatedEvent]):
 
     def __init__(
         self,
-        configuration_repository: ICommentAutoResponseConfigurationRepository,
+        configuration_repository: ICommentAutoReplyConfigurationRepository,
         ai_client: IAIClient,
         post_comment_repository: IPostCommentRepository,
         post_repository: IPostRepository,
         user_repository: IUserRepository,
         redis_client: IRedisClient,
-        modules_config: ModulesConfig,
+        command_bus: ICommandBus,
     ):
         self._configuration_repository = configuration_repository
         self._queue = Queue(connection=redis_client.client)
@@ -33,7 +33,7 @@ class AutoResponseForNewComment(IEventHandler[NewCommentCreatedEvent]):
         self._post_comment_repository = post_comment_repository
         self._post_repository = post_repository
         self._user_repository = user_repository
-        self._modules_config = modules_config
+        self._command_bus = command_bus
 
     async def __call__(
         self,
@@ -43,26 +43,17 @@ class AutoResponseForNewComment(IEventHandler[NewCommentCreatedEvent]):
             user_id=message.post_author_id,
         )
 
-        if configuration.enabled and message.comment_author_id != message.post_author_id and not message.blocked:
-            self._queue.enqueue_in(
-                time_delta=timedelta(seconds=configuration.auto_reply_delay),
-                func=AutoReplyTask.execute,
-                dto=NewCommentCreatedTaskDTO(
-                    post_id=message.post_id,
-                    comment_id=message.comment_id,
-                    comment_author_id=message.comment_author_id,
-                    post_author_id=message.post_author_id,
-                    modules=self._modules_config.modules,
-                ),
+        if configuration.enabled and not message.blocked:
+            command = AutoReplyCommentCommand(
+                post_id=message.post_id,
+                comment_id=message.comment_id,
+                comment_author_id=message.comment_author_id,
+                post_author_id=message.post_author_id,
             )
-            self._queue.enqueue(
-                AutoReplyTask.execute,
-                dto=NewCommentCreatedTaskDTO(
-                    post_id=message.post_id,
-                    comment_id=message.comment_id,
-                    comment_author_id=message.comment_author_id,
-                    post_author_id=message.post_author_id,
-                    modules=self._modules_config.modules,
-                ),
+            command.update_config(
+                config=BackgroundExecutionOption,
+                enqueue_in=10,
             )
-
+            await self._command_bus.handle(
+                message=command,
+            )

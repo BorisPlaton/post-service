@@ -1,5 +1,3 @@
-from functools import cached_property
-
 import jwt
 from jwt import DecodeError
 from jwt import ExpiredSignatureError
@@ -9,15 +7,10 @@ from domain.jwt_token.exception.expired_token_provided import ExpiredTokenProvid
 from domain.jwt_token.exception.invalid_token_provided import InvalidTokenProvided
 from domain.jwt_token.types.jwt_payload import JWTPayload
 from domain.jwt_token.types.jwt_payload import JWTPayloadBody
-from shared.message_bus.command_bus.config.mixin import IConfigurableCommand
-from shared.message_bus.command_bus.config.options.transactional import TransactionalOption
-from shared.message_bus.command_bus.handler.interface import ICommandHandler
+from infrastructure.message_bus.command_bus.handler.interface import ICommandHandler
 
 
-class ValidateJWTCommandHandler(
-    ICommandHandler[int, ValidateJWTCommand],
-    IConfigurableCommand,
-):
+class ValidateJWTCommandHandler(ICommandHandler[ValidateJWTCommand, int]):
     """
     Validates that the provided JWT is valid and returns its body payload.
     """
@@ -58,11 +51,3 @@ class ValidateJWTCommandHandler(
             raise InvalidTokenProvided()
 
         return JWTPayload.from_json(decoded_token).body
-
-    @cached_property
-    def config(self) -> dict[type[TransactionalOption], TransactionalOption]:
-        return {
-            TransactionalOption: TransactionalOption(
-                is_transactional=False,
-            )
-        }

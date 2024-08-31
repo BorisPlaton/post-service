@@ -1,4 +1,4 @@
-from shared.exception.forbidden import Forbidden
+from infrastructure.exception.forbidden import Forbidden
 
 
 class InvalidTokenProvided(Forbidden):
